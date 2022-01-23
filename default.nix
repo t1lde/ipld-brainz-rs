@@ -10,7 +10,7 @@
 , cargo
 , rustc
   # , llvmPackages # Optional
-  # , protobuf     # Optional
+, protobuf     # Optional
 }:
 
 let
@@ -26,22 +26,28 @@ naersk.lib."${targetPlatform.system}".buildPackage rec {
     cargo
     rustc
     libiconv
+    protobuf
   ];
   checkInputs = [ cargo rustc ];
 
   doCheck = true;
+
   CARGO_BUILD_INCREMENTAL = "false";
+
   RUST_BACKTRACE = "full";
+
   copyLibs = true;
+
+  doDoc = true;
 
   # Optional things you might need:
   #
   # If you depend on `libclang`:
   # LIBCLANG_PATH = "${llvmPackages.libclang}/lib";
-  #
+  
   # If you depend on protobuf:
-  # PROTOC = "${protobuf}/bin/protoc";
-  # PROTOC_INCLUDE = "${protobuf}/include";
+  PROTOC = "${protobuf}/bin/protoc";
+  PROTOC_INCLUDE = "${protobuf}/include";
 
   name = cargoToml.package.name;
   version = cargoToml.package.version;
